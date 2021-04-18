@@ -36,8 +36,8 @@ import com.example.demo.service.LeaveService;
 @RequestMapping("/api/v1")
 @CrossOrigin("*")
 @AllArgsConstructor
+
 public class LeaveController {
-    //private LeaveRepository leaveRepository;
 
     private LeaveService leaveService;
 
@@ -60,14 +60,14 @@ public class LeaveController {
         }
 
         System.out.println("----------user name is ------------------------- in getTrainerFUnction LeaveController" + username);
-        return trainerRepository.findByName(username);
+        return trainerRepository.findByUsername(username);
     }
 
 
     @GetMapping("/person")
     public List<Leave> getLeave() {
 //getLeavesByTrainer
-       Trainer trainer = getTrainer();
+        Trainer trainer = getTrainer();
 
 
 

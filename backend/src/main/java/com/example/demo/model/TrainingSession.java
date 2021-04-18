@@ -1,10 +1,12 @@
 package com.example.demo.model;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.persistence.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
 
 @Entity
 @Table(name="training_session")
@@ -34,7 +36,6 @@ public class TrainingSession {
     private String sessionName;
 
     @Column(name = "start_date")
-    @JsonFormat(pattern = "yyyy-MM-dd")
     private Date startDate;
 
     @Column(name = "duration")
@@ -55,33 +56,6 @@ public class TrainingSession {
     @Column(name = "delivery_method")
     private String deliveryMethod;
 
-    @Column(name = "type")
-    private String type;
-
-
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "location_id", referencedColumnName = "id")
-    private Location location;
-
-
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "trainingRoom_id", referencedColumnName = "id")
-    private TrainingRoom trainingRoom;
-
-
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "trainingCordinator_id", referencedColumnName = "id")
-    private TrainingCordinator trainingCordinator;
-
-
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
 
     public TrainingSession() {
     }
@@ -93,8 +67,7 @@ public class TrainingSession {
                            String ifsApplicationVersion,
                            int bufferTime,
                            String managerComment,
-                           String deliveryMethod,
-                           String type) {
+                           String deliveryMethod) {
         super();
         this.sessionName = sessionName;
         this.startDate = startDate;
@@ -104,7 +77,6 @@ public class TrainingSession {
         this.bufferTime = bufferTime;
         this.managerComment = managerComment;
         this.deliveryMethod = deliveryMethod;
-        this.type = type;
     }
 
     public long getId() {
@@ -179,21 +151,27 @@ public class TrainingSession {
         this.deliveryMethod = deliveryMethod;
     }
 
-    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH })
+
+
+    @ManyToOne(cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH })
+    @JoinColumn(name = "coordinator_id")
+    private Coordinator coordinator;
+
+    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
     @JoinTable(
             name = "training_session_virtual_machine",
             joinColumns = @JoinColumn(name = "s_id"),
             inverseJoinColumns = @JoinColumn(name = "vm_id")
     )
     @JsonIgnoreProperties("trainingSessions")
-    private Set<VirtualMachine> virtualMachines;
+    private List<VirtualMachine> virtualMachines;
 
 
-    public Set<VirtualMachine> getVirtualMachines() {
+    public List<VirtualMachine> getVirtualMachines() {
         return virtualMachines;
     }
 
-    public void setVirtualMachines(Set<VirtualMachine> virtualMachines) {
+    public void setVirtualMachines(List<VirtualMachine> virtualMachines) {
         this.virtualMachines = virtualMachines;
     }
 
@@ -203,7 +181,7 @@ public class TrainingSession {
 
         if (virtualMachines == null) {
 
-            virtualMachines = new HashSet<VirtualMachine>();
+            virtualMachines = new ArrayList<VirtualMachine>();
 
         }
         System.out.println("virtual machine added" + virtualMachine.getVirtualMachineId());
@@ -220,7 +198,7 @@ public class TrainingSession {
     )
 
     @JsonIgnoreProperties("trainingSessions")
-    private Set<Trainer> trainers;
+    private List<Trainer> trainers;
 
     public long[] getTrainerids() {
         return trainerids;
@@ -230,11 +208,11 @@ public class TrainingSession {
         this.trainerids = trainerids;
     }
 
-    public Set<Trainer> getTrainers() {
+    public List<Trainer> getTrainers() {
         return trainers;
     }
 
-    public void setTrainers(Set<Trainer> trainers) {
+    public void setTrainers(List<Trainer> trainers) {
         this.trainers = trainers;
     }
 
@@ -242,7 +220,7 @@ public class TrainingSession {
 
         if(trainers ==null) {
 
-            trainers = new HashSet<Trainer>();
+            trainers = new ArrayList<Trainer>();
 
         }
 

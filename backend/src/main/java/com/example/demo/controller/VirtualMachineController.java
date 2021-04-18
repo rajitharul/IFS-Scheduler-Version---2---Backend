@@ -2,6 +2,7 @@ package com.example.demo.controller;
 
 
 import com.example.demo.exception.ResourceNotFoundException;
+import com.example.demo.model.TrainingSession;
 import com.example.demo.model.VirtualMachine;
 import com.example.demo.repository.VirtualMachineRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,14 +28,21 @@ public class VirtualMachineController {
         return virtualMachineRepository.findAll();
     }
 
+    @GetMapping("/virtualMachines-trainingSession/{id}")
+    public List<VirtualMachine> getVirtualMachineByTrainingSessions(@PathVariable Long id){
+        System.out.println(virtualMachineRepository.findVirtualMachineByTrainingSessions(id).get(1).getVirtualMachineName());
+        return virtualMachineRepository.findVirtualMachineByTrainingSessions(id);
+    }
 
 
-    @GetMapping("/availableVirtualMachines/{datestring}")
-    public List<VirtualMachine> getAvailableVirtualMachines(@PathVariable String datestring) throws ParseException {
+
+    @GetMapping("/availableVirtualMachines/{datestring}/{product}")
+    public List<VirtualMachine> getAvailableVirtualMachines(@PathVariable String datestring, @PathVariable String product) throws ParseException {
 
         System.out.println("running method");
 
-        List<VirtualMachine> virtualMachines = virtualMachineRepository.findAll();
+        List<VirtualMachine> virtualMachines = virtualMachineRepository.findAllByProduct(product);
+        System.out.println(virtualMachines);
 
         List<VirtualMachine> availableVms =  new ArrayList<VirtualMachine>();
 
@@ -97,7 +105,6 @@ public class VirtualMachineController {
 
 
 
-
     //add virtual machines
     @PreAuthorize("hasRole('MANAGER')")
     @PostMapping("/virtualMachines")
@@ -113,12 +120,20 @@ public class VirtualMachineController {
         return ResponseEntity.ok(virtualMachine);
     }
 
+    @PutMapping("/virtualMachines/{id}")
+    public ResponseEntity<VirtualMachine> updateVirtualMachine(@PathVariable Long id, @RequestBody VirtualMachine virtualMachine) {
+        virtualMachineRepository.save(virtualMachine);
+
+
+        return ResponseEntity.ok(virtualMachine);
+
+    }
+
     //delete virtual machine
     @DeleteMapping("/virtualMachines/{id}")
     public ResponseEntity<Map<String,Boolean>> deleteVirtualMachine(@PathVariable Long id){
         VirtualMachine virtualMachine = virtualMachineRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Virtual Machine Not Found"));
-
 
         virtualMachineRepository.delete(virtualMachine);
         Map<String,Boolean> response = new HashMap<>();

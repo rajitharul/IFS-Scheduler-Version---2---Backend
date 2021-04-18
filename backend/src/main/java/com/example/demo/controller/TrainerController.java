@@ -2,14 +2,9 @@ package com.example.demo.controller;
 
 import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.model.Trainer;
-import com.example.demo.model.TrainingSession;
-import com.example.demo.model.User;
-import com.example.demo.model.VirtualMachine;
 import com.example.demo.repository.TrainerRepository;
-import com.example.demo.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.text.ParseException;
@@ -24,36 +19,23 @@ import java.util.List;
 @RequestMapping("/api")
 public class TrainerController {
 
+
     @Autowired
     private TrainerRepository trainerRepository;
 
-    //get all trainer
+    //get all trainers
     @GetMapping("/trainers")
     public List<Trainer> getAllTrainers() {
         return trainerRepository.findAll();
     }
 
-
-    //getTrainerbyId
+    //get trainer by id
     @GetMapping("/trainers/{id}")
-    public Trainer getTrainerById (@PathVariable Long id) {
-
-        return trainerRepository.findByTrainerId(id);
-
+    public ResponseEntity<Trainer> getTrainerById(@PathVariable Long id) {
+        Trainer trainer = trainerRepository.findById(id)
+                 .orElseThrow(() -> new ResourceNotFoundException("Trainer Not Found"));
+        return ResponseEntity.ok(trainer);
     }
-
-
-
-
-    //add trainer session
-    @PostMapping("/trainers")
-    @PreAuthorize("hasRole('ROLE_MANAGER')")
-    public void addTrainer(@RequestBody Trainer trainer) {
-        trainerRepository.save(trainer);
-    }
-
-
-
 
     @GetMapping("/trainers/{type}/{datestring}")
     public List<Trainer> getTrainerByType(@PathVariable String type , @PathVariable String datestring) throws ParseException {
@@ -71,20 +53,6 @@ public class TrainerController {
         System.out.println("date is " + date);
 
 
-        int Duration  = 2;
-
-        Date date2 =formatter2.parse(datestring);
-
-        Calendar c1 = Calendar.getInstance();
-        c1.setTime(date2);
-        c1.add(Calendar.DATE , Duration);
-
-        System.out.println("*********** THe date before adding the duration " + date2.toString());
-
-
-        System.out.println("*********** THe date after adding the duration " + c1.getTime().toString());
-
-
 
 
 
@@ -98,26 +66,26 @@ public class TrainerController {
                 Date date1 = formatter2.parse(trainers.get(i).getTrainingSessions().get(j).getStartDate().toString());
                 System.out.println(" Relevant training Session date is  " + date1);
 
-                    for(int k=0 ; k<trainers.get(i).getTrainingSessions().get(j).getDuration() ; k++){
+                for(int k=0 ; k<trainers.get(i).getTrainingSessions().get(j).getDuration() ; k++){
 
-                        //increment date
-
-
-                        String dt = date1.toString();  // Start date
-                        Calendar c = Calendar.getInstance();
-                        c.setTime(date1);
-                        c.add(Calendar.DATE, k);  // number of days to add
-
-                        System.out.println("Duration Function date is " + c.getTime().toString() + " After adding " + k);
+                    //increment date
 
 
-                        if(c.getTime().toString().equals(date.toString())){
+                    String dt = date1.toString();  // Start date
+                    Calendar c = Calendar.getInstance();
+                    c.setTime(date1);
+                    c.add(Calendar.DATE, k);  // number of days to add
 
-                            System.out.println("---------------busy because of -------------" + c.getTime().toString() + " si equal to " +date.toString() );
-                            availability = 0;
-                        }
+                    System.out.println("Duration Function date is " + c.getTime().toString() + " After adding " + k);
 
+
+                    if(c.getTime().toString().equals(date.toString())){
+
+                        System.out.println("---------------busy because of -------------" + c.getTime().toString() + " si equal to " +date.toString() );
+                        availability = 0;
                     }
+
+                }
 
 
 
@@ -133,4 +101,7 @@ public class TrainerController {
 
         return availableTrainers;
     }
+
+
+
 }

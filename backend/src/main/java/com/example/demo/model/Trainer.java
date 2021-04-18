@@ -1,27 +1,44 @@
 package com.example.demo.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import org.hibernate.annotations.NaturalId;
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "trainer" )
+@Table(name = "trainer", uniqueConstraints = {
+        @UniqueConstraint(columnNames = {
+                "email"
+        }),
+        @UniqueConstraint(columnNames = {
+                "user_name"
+        })
+})
 public class Trainer {
-
 
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long trainerId;
 
-    @Column(name = "name" , unique=true,nullable = false)
-    private  String name;
+    @NotBlank
+    @Size(min=3, max = 50)
+    @Column(name="name")
+    private String name;
 
-    @Column(name = "Type")
-    private  String type;
+    @NotBlank
+    @Size(min=3, max = 50)
+    @Column(name="user_name")
+    private String username;
+
+    @NotBlank
+    @Column(name = "type")
+    private String type;
 
     @ElementCollection
     @CollectionTable(
@@ -38,12 +55,48 @@ public class Trainer {
         this.qualifications = qualifications;
     }
 
+    @NaturalId
+    @NotBlank
+    @Size(max = 50)
+    @Email
+    @Column(name="email")
+    private String email;
+
+    @NotBlank
+    @Column(name="contactNo")
+    private String contactNo;
+
+
+
+    public Trainer() {
+    }
+
+    public Trainer(@NotBlank @Size(min = 3, max = 50) String name, @NotBlank @Size(min = 3, max = 50) String username, @NotBlank String type, List<String> qualifications, @NotBlank @Size(max = 50) @Email String email, @NotBlank String contactNo) {
+        this.name = name;
+        this.username = username;
+        this.type = type;
+        this.qualifications=qualifications;
+        this.email = email;
+        this.contactNo = contactNo;
+    }
+
     public String getName() {
         return name;
     }
 
     public void setName(String name) {
         this.name = name;
+    }
+
+
+
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String userName) {
+        this.username = username;
     }
 
     public String getType() {
@@ -54,7 +107,20 @@ public class Trainer {
         this.type = type;
     }
 
-    public Trainer() {
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getContactNo() {
+        return contactNo;
+    }
+
+    public void setContactNo(String contactNo) {
+        this.contactNo = contactNo;
     }
 
     @ManyToMany(fetch = FetchType.LAZY , cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
@@ -68,10 +134,7 @@ public class Trainer {
     private List<TrainingSession> trainingSessions;
 
 
-    public Trainer(String name, String type) {
-        this.name = name;
-        this.type = type;
-    }
+
 
     public List<TrainingSession> getTrainingSessions() {
         return trainingSessions;
@@ -106,27 +169,12 @@ public class Trainer {
     }
 
 
-    public void addQualification(String qualification) {
-
-        if(qualifications ==null) {
-
-            qualifications = new ArrayList<String>();
-
-        }
-
-        qualifications.add(qualification);
-
-    }
-
-
-
-
 
     @OneToMany(fetch = FetchType.LAZY,mappedBy = "trainer" ,
             cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH}
     )
-    @JsonIgnore
-   private List<Leave> leaveApplications;
+    @JsonIgnoreProperties("trainer")
+    private List<Leave> leaveApplications;
 
 
     public List<Leave> getLeaveApplications() {

@@ -1,13 +1,12 @@
 package com.example.demo.controller;
 
 import com.example.demo.message.request.LoginForm;
-import com.example.demo.message.request.SignUpForm;
+import com.example.demo.message.request.AddTrainerForm;
 import com.example.demo.message.response.JwtResponse;
 import com.example.demo.message.response.ResponseMessage;
-import com.example.demo.model.Role;
-import com.example.demo.model.RoleName;
-import com.example.demo.model.User;
+import com.example.demo.model.*;
 import com.example.demo.repository.RoleRepository;
+import com.example.demo.repository.TrainerRepository;
 import com.example.demo.repository.UserRepository;
 import com.example.demo.security.jwt.JwtProvider;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +24,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
@@ -39,7 +39,12 @@ public class AuthRestAPIs {
     UserRepository userRepository;
 
     @Autowired
+    TrainerRepository trainerRepository;
+
+    @Autowired
     RoleRepository roleRepository;
+
+
 
     @Autowired
     PasswordEncoder encoder;
@@ -63,25 +68,29 @@ public class AuthRestAPIs {
         return ResponseEntity.ok(new JwtResponse(jwt, userDetails.getUsername(), userDetails.getAuthorities()));
     }
 
-    @PostMapping("/signup")
+    @PostMapping("/add-trainer")
     @PreAuthorize("hasRole('MANAGER')")
     @Transactional
-    public ResponseEntity<?> registerUser(@Valid @RequestBody SignUpForm signUpRequest) {
-        if (userRepository.existsByUsername(signUpRequest.getUsername())) {
+    public ResponseEntity<?> registerUser(@Valid @RequestBody AddTrainerForm addTrainerForm) {
+        if (trainerRepository.existsByUsername(addTrainerForm.getUsername())) {
             return new ResponseEntity<>(new ResponseMessage("Fail -> Username is already taken!"),
                     HttpStatus.BAD_REQUEST);
         }
 
-        if (userRepository.existsByEmail(signUpRequest.getEmail())) {
+        if (trainerRepository.existsByEmail(addTrainerForm.getEmail())) {
             return new ResponseEntity<>(new ResponseMessage("Fail -> Email is already in use!"),
                     HttpStatus.BAD_REQUEST);
         }
 
-        // Creating user's account
-        User user = new User(signUpRequest.getName(), signUpRequest.getUsername(), signUpRequest.getEmail(),
-                encoder.encode(signUpRequest.getPassword()));
 
-        Set<String> strRoles = signUpRequest.getRole();
+        // Creating user's account
+        User user = new User( addTrainerForm.getUsername(),
+                encoder.encode(addTrainerForm.getPassword()));
+
+        Trainer trainer = new Trainer(addTrainerForm.getName(),addTrainerForm.getUsername(), addTrainerForm.getType(), addTrainerForm.getQualifications(), addTrainerForm.getEmail(), addTrainerForm.getContactNo());
+
+
+        Set<String> strRoles = addTrainerForm.getRole();
         Set<Role> roles = new HashSet<>();
 
 
@@ -104,6 +113,7 @@ public class AuthRestAPIs {
                 default:
                     Role trainerRole = roleRepository.findByName(RoleName.ROLE_TRAINER)
                             .orElseThrow(() -> new RuntimeException("Fail! -> Cause: User Role not find."));
+                    System.out.println(trainerRole.toString());
                     roles.add(trainerRole);
             }
         });
@@ -111,12 +121,10 @@ public class AuthRestAPIs {
 
         user.setRoles(roles);
         userRepository.save(user);
-
-
+        trainerRepository.save(trainer);
 
 
         return new ResponseEntity<>(new ResponseMessage("User registered successfully!"), HttpStatus.OK);
     }
-
 
 }

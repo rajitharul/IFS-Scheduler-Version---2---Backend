@@ -5,8 +5,6 @@ import com.example.demo.model.Trainer;
 import com.example.demo.model.TrainingSession;
 import com.example.demo.repository.TrainerRepository;
 import com.example.demo.repository.TrainingSessionRepository;
-import com.example.demo.repository.UserRepository;
-import com.example.demo.repository.VirtualMachineRepository;
 import com.example.demo.service.TrainingSessionService;
 import com.example.demo.service.TrainingSessionServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +17,7 @@ import java.util.List;
 import java.util.Map;
 
 
+
 @RestController
 @CrossOrigin
 @RequestMapping("/api")
@@ -29,45 +28,30 @@ public class TrainingSessionController {
     private TrainingSessionRepository trainingSessionRepository;
 
     @Autowired
-    private TrainerRepository trainerRepository;
-
-    @Autowired
-    private UserRepository userRepository;
-
-
-    @Autowired
     private TrainingSessionService trainingSessionService;
 
     @Autowired
-    private VirtualMachineRepository virtualMachineRepository;
-
-
+    private TrainerRepository trainerRepository;
 
     //get all training session api
     @GetMapping("/trainingSessions")
-    public List<TrainingSession> getAllTrainingSession() {
-        System.out.println("Getting training Sessions ------*******------12-----*---*-*-*------------------------------****************------------***");
 
+    public List<TrainingSession> getAllTrainingSession() {
         return trainingSessionRepository.findAll();
     }
-
 
     @GetMapping("/trainingSessionByTrainer/{username}")
     public List<TrainingSession> getAllTrainingSessionbyTrainer(@PathVariable String username) {
 
 
 
-      String trainerName = userRepository.findUserByUsername(username).getName();
 
-     Trainer trainer = trainerRepository.findByName(trainerName);
-      List<TrainingSession> trainingSessions  = trainer.getTrainingSessions();
+        Trainer trainer = trainerRepository.findByUsername(username);
+        List<TrainingSession> trainingSessions  = trainer.getTrainingSessions();
 
 
         return trainingSessions;
     }
-
-
-
 
     //add training session
     @PostMapping("/trainingSessions")
@@ -76,15 +60,19 @@ public class TrainingSessionController {
          trainingSessionService.saveTrainingSession(trainingSession);
     }
 
-
-
-
     //get training session by id
     @GetMapping("/trainingSessions/{id}")
 
     public ResponseEntity<TrainingSession> getTrainingSessionById(@PathVariable Long id) {
         TrainingSession trainingSession = trainingSessionRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Training Session Not Found"));
+
+        String temp = trainingSession.getIfsApplicationVersion();
+
+        String replaceString=temp.replace('-',' ');
+        trainingSession.setIfsApplicationVersion(replaceString);
+        System.out.println(replaceString);
+
         return ResponseEntity.ok(trainingSession);
     }
 
@@ -93,11 +81,27 @@ public class TrainingSessionController {
     @PutMapping("/trainingSessions/{id}")
 
     public ResponseEntity<TrainingSession> updateTrainingSession(@PathVariable Long id, @RequestBody TrainingSession trainingSessionDetails) {
-
         trainingSessionService.updateTrainingSession(trainingSessionDetails , id);
 
 
         return ResponseEntity.ok(trainingSessionDetails);
+
+    }
+
+    // update virtual machine of training sessions
+    @PutMapping("/trainingSessionVm/{id}")
+    public ResponseEntity<TrainingSession> updateTrainingSessionVm(@PathVariable Long id, @RequestBody TrainingSession trainingSessionDetails) {
+        TrainingSession trainingSession = trainingSessionRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Training Session Not Found")
+                );
+
+        trainingSession.setVirtualMachines(trainingSessionDetails.getVirtualMachines());
+
+        System.out.println(trainingSession.toString());
+
+
+        TrainingSession updateTrainingSession = trainingSessionRepository.save(trainingSession);
+        return ResponseEntity.ok(updateTrainingSession);
 
     }
 
