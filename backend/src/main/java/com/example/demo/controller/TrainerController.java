@@ -44,6 +44,16 @@ public class TrainerController {
 
 
 
+    //getTrainerbyName
+    @GetMapping("/trainerByname/{name}")
+    public Trainer getTrainerByName (@PathVariable String name) {
+
+        return trainerRepository.findByName(name);
+
+    }
+
+
+
 
     //add trainer session
     @PostMapping("/trainers")

@@ -29,8 +29,8 @@ public class VirtualMachineController {
 
 
 
-    @GetMapping("/availableVirtualMachines/{datestring}")
-    public List<VirtualMachine> getAvailableVirtualMachines(@PathVariable String datestring) throws ParseException {
+    @GetMapping("/availableVirtualMachines/{datestring}/{version}/{duration}")
+    public List<VirtualMachine> getAvailableVirtualMachines(@PathVariable String datestring , @PathVariable String version , @PathVariable int duration) throws ParseException {
 
         System.out.println("running method");
 
@@ -71,16 +71,30 @@ public class VirtualMachineController {
                     System.out.println("Duration Function date is " + c.getTime().toString() + " After adding " + k);
 
 
-                    if(c.getTime().toString().equals(date.toString())){
+                    //to check the duration of the
 
-                        System.out.println("---------------busy because of -------------" + c.getTime().toString() + " si equal to " +date.toString() );
-                        availability = 0;
-                    }
+
+                    Calendar c1 = Calendar.getInstance();
+                    c1.setTime(date);
+                    // number of days to add
+
+
+                        for(int l = 0 ; l<duration ; l++){
+                            c1.add(Calendar.DATE, l);
+                            if(c.getTime().toString().equals(c1.getTime().toString())){
+
+                                System.out.println("---------------busy because of -------------" + c.getTime().toString() + " si equal to " +date.toString() );
+                                availability = 0;
+                            }
+
+                        }
+
+
+
 
                 }
 
 
-///////////////////////////////////////
 
             }
 
