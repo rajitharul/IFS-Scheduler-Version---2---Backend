@@ -60,7 +60,7 @@ public class LeaveController {
         }
 
         System.out.println("----------user name is ------------------------- in getTrainerFUnction LeaveController" + username);
-        return trainerRepository.findByName(username);
+        return trainerRepository.findByUser_Username(username);
     }
 
 
