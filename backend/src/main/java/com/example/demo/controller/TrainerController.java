@@ -44,6 +44,16 @@ public class TrainerController {
 
 
 
+    //getTrainerbyName
+    @GetMapping("/trainerByname/{name}")
+    public Trainer getTrainerByName (@PathVariable String name) {
+
+        return trainerRepository.findByName(name);
+
+    }
+
+
+
 
     //add trainer session
     @PostMapping("/trainers")
@@ -55,8 +65,8 @@ public class TrainerController {
 
 
 
-    @GetMapping("/trainers/{type}/{datestring}")
-    public List<Trainer> getTrainerByType(@PathVariable String type , @PathVariable String datestring) throws ParseException {
+    @GetMapping("/trainers/{type}/{datestring}/{duration}")
+    public List<Trainer> getTrainerByType(@PathVariable String type , @PathVariable String datestring , @PathVariable int duration) throws ParseException {
 
         System.out.println("Data String is data string" + datestring);
 
@@ -69,22 +79,6 @@ public class TrainerController {
         Date date=formatter2.parse(datestring);
 
         System.out.println("date is " + date);
-
-
-        int Duration  = 2;
-
-        Date date2 =formatter2.parse(datestring);
-
-        Calendar c1 = Calendar.getInstance();
-        c1.setTime(date2);
-        c1.add(Calendar.DATE , Duration);
-
-        System.out.println("*********** THe date before adding the duration " + date2.toString());
-
-
-        System.out.println("*********** THe date after adding the duration " + c1.getTime().toString());
-
-
 
 
 
@@ -117,7 +111,60 @@ public class TrainerController {
                             availability = 0;
                         }
 
+
+                        //checking with the duration of the session
+
+
+                        Calendar c1 = Calendar.getInstance();
+                        c1.setTime(date);
+                        // number of days to add
+
+
+                        for(int l = 0 ; l<duration ; l++){
+                            c1.add(Calendar.DATE, l);
+                            if(c.getTime().toString().equals(c1.getTime().toString())){
+
+                                System.out.println("---------------busy because of -------------" + c.getTime().toString() + " si equal to " +date.toString() );
+                                availability = 0;
+                            }
+
+                        }
+
+
+
+
                     }
+
+
+
+
+
+
+
+
+
+
+                    //get the number of leave applications for a specific trainer
+                    for(int k = 0 ; k<trainers.get(i).getLeaveApplications().size() ; k++ ){
+
+                        //get the leave date and check
+
+                        if(trainers.get(i).getLeaveApplications().get(k).getDate().toString().equals(date.toString())){
+
+                            System.out.println("---------------busy because of leave -------------" + trainers.get(i).getLeaveApplications().get(k).getDate().toString() + " si equal to " +date.toString() );
+                            availability = 0;
+                        }
+
+
+                    }
+
+
+
+
+
+
+
+
 
 
 
