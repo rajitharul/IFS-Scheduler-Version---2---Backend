@@ -65,8 +65,8 @@ public class TrainerController {
 
 
 
-    @GetMapping("/trainers/{type}/{datestring}")
-    public List<Trainer> getTrainerByType(@PathVariable String type , @PathVariable String datestring) throws ParseException {
+    @GetMapping("/trainers/{type}/{datestring}/{duration}")
+    public List<Trainer> getTrainerByType(@PathVariable String type , @PathVariable String datestring , @PathVariable int duration) throws ParseException {
 
         System.out.println("Data String is data string" + datestring);
 
@@ -111,7 +111,37 @@ public class TrainerController {
                             availability = 0;
                         }
 
+
+                        //checking with the duration of the session
+
+
+                        Calendar c1 = Calendar.getInstance();
+                        c1.setTime(date);
+                        // number of days to add
+
+
+                        for(int l = 0 ; l<duration ; l++){
+                            c1.add(Calendar.DATE, l);
+                            if(c.getTime().toString().equals(c1.getTime().toString())){
+
+                                System.out.println("---------------busy because of -------------" + c.getTime().toString() + " si equal to " +date.toString() );
+                                availability = 0;
+                            }
+
+                        }
+
+
+
+
                     }
+
+
+
+
+
+
+
+
 
 
                     //get the number of leave applications for a specific trainer
@@ -127,6 +157,11 @@ public class TrainerController {
 
 
                     }
+
+
+
+
+
 
 
 
