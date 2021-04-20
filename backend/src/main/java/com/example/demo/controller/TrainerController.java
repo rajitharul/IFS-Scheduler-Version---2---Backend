@@ -81,22 +81,6 @@ public class TrainerController {
         System.out.println("date is " + date);
 
 
-        int Duration  = 2;
-
-        Date date2 =formatter2.parse(datestring);
-
-        Calendar c1 = Calendar.getInstance();
-        c1.setTime(date2);
-        c1.add(Calendar.DATE , Duration);
-
-        System.out.println("*********** THe date before adding the duration " + date2.toString());
-
-
-        System.out.println("*********** THe date after adding the duration " + c1.getTime().toString());
-
-
-
-
 
         for(int i=0 ; i<trainers.size() ; i++){
 
@@ -128,6 +112,24 @@ public class TrainerController {
                         }
 
                     }
+
+
+                    //get the number of leave applications for a specific trainer
+                    for(int k = 0 ; k<trainers.get(i).getLeaveApplications().size() ; k++ ){
+
+                        //get the leave date and check
+
+                        if(trainers.get(i).getLeaveApplications().get(k).getDate().toString().equals(date.toString())){
+
+                            System.out.println("---------------busy because of leave -------------" + trainers.get(i).getLeaveApplications().get(k).getDate().toString() + " si equal to " +date.toString() );
+                            availability = 0;
+                        }
+
+
+                    }
+
+
+
 
 
 
