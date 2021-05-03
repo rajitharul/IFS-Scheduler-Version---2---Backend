@@ -1,9 +1,12 @@
 package com.example.demo.model;
 
 import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "location")
+
 public class Location {
 
     @Id
@@ -16,6 +19,11 @@ public class Location {
 
     @Column(name="location_name")
     private String locationName;
+
+
+    @OneToMany(mappedBy="location")
+    private Set<TrainingSession> trainingSessions;
+
 
     public Long getId() {
         return id;
