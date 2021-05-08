@@ -1,8 +1,6 @@
 package com.example.demo.controller;
 
-import com.example.demo.model.Location;
-import com.example.demo.model.TrainingCordinator;
-import com.example.demo.model.TrainingRoom;
+import com.example.demo.model.*;
 import com.example.demo.repository.LocationRepository;
 import com.example.demo.repository.TrainerCordinatorRepository;
 import com.example.demo.repository.TrainingRoomRepository;
@@ -36,6 +34,16 @@ public class GeneralController {
         return trainerCordinatorRepository.findAll();
     }
 
+
+    @PostMapping("/trainerCordinators")
+    public TrainingCordinator addTrainingCordinator(@RequestBody TrainingCordinator trainingCordinator) {
+
+        return trainerCordinatorRepository.save(trainingCordinator);
+    }
+
+
+
+
     //get all locations
     @GetMapping("/locations")
     public List<Location> getAlllocations() {
@@ -43,11 +51,26 @@ public class GeneralController {
     }
 
 
+    @PostMapping("/locations")
+    public Location addLocation(@RequestBody Location location) {
+
+        return locationRepository.save(location);
+    }
+
     //get all trainingRooms
     @GetMapping("/trainingRooms")
     public List<TrainingRoom> getAlltrainingRooms() {
         return trainingRoomRepository.findAll();
     }
+
+
+    @PostMapping("/trainingRooms")
+    public TrainingRoom addTrainingCordinator(@RequestBody TrainingRoom trainingRoom) {
+
+        return trainingRoomRepository.save(trainingRoom);
+    }
+
+
 
 
 }
