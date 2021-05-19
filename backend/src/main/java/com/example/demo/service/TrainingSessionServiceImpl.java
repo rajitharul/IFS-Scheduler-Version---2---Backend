@@ -68,6 +68,17 @@ public class TrainingSessionServiceImpl implements TrainingSessionService {
 			
 		}		
 
+
+
+
+
+
+
+
+
+
+
+
 		trainingSessionRepository.save(trainingSession);
 
 	}

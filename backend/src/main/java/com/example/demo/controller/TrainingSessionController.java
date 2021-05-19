@@ -1,6 +1,7 @@
 package com.example.demo.controller;
 
 import com.example.demo.exception.ResourceNotFoundException;
+import com.example.demo.model.NotificationUpdate;
 import com.example.demo.model.Trainer;
 import com.example.demo.model.TrainingSession;
 import com.example.demo.repository.TrainerRepository;
@@ -14,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import javax.management.Notification;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -73,6 +75,8 @@ public class TrainingSessionController {
     @PostMapping("/trainingSessions")
     @PreAuthorize("hasRole('ROLE_MANAGER')")
     public void createTrainingSession(@RequestBody TrainingSession trainingSession) {
+
+
          trainingSessionService.saveTrainingSession(trainingSession);
     }
 

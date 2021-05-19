@@ -1,6 +1,9 @@
 package com.example.demo.model;
 
+
 import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "training_cordinator")
@@ -14,6 +17,14 @@ public class TrainingCordinator {
 
     @Column(name="name")
     private String name;
+
+
+    @OneToMany(mappedBy="trainingCordinator")
+    private Set<TrainingSession> trainingSessions;
+
+
+
+
 
     public TrainingCordinator() {
     }

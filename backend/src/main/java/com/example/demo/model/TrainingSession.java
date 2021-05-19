@@ -59,17 +59,17 @@ public class TrainingSession {
     private String type;
 
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = { CascadeType.MERGE, CascadeType.REFRESH})
     @JoinColumn(name = "location_id", referencedColumnName = "id")
     private Location location;
 
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = { CascadeType.MERGE, CascadeType.REFRESH})
     @JoinColumn(name = "trainingRoom_id", referencedColumnName = "id")
     private TrainingRoom trainingRoom;
 
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = { CascadeType.MERGE, CascadeType.REFRESH})
     @JoinColumn(name = "trainingCordinator_id", referencedColumnName = "id")
     private TrainingCordinator trainingCordinator;
 
@@ -254,11 +254,38 @@ public class TrainingSession {
 
 
 
+    @OneToMany(mappedBy = "trainingSession")
+    Set <NotificationUpdate> updates;
 
+    public Location getLocation() {
+        return location;
+    }
 
+    public void setLocation(Location location) {
+        this.location = location;
+    }
 
+    public TrainingRoom getTrainingRoom() {
+        return trainingRoom;
+    }
 
+    public void setTrainingRoom(TrainingRoom trainingRoom) {
+        this.trainingRoom = trainingRoom;
+    }
 
+    public TrainingCordinator getTrainingCordinator() {
+        return trainingCordinator;
+    }
 
+    public void setTrainingCordinator(TrainingCordinator trainingCordinator) {
+        this.trainingCordinator = trainingCordinator;
+    }
 
+    public Set<NotificationUpdate> getUpdates() {
+        return updates;
+    }
+
+    public void setUpdates(Set<NotificationUpdate> updates) {
+        this.updates = updates;
+    }
 }

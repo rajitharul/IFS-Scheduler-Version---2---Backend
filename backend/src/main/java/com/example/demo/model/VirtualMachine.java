@@ -15,8 +15,20 @@ public class VirtualMachine {
     @Column(name="product")
     private String product;
 
+
+    @Column(name="name")
+    private String name;
+
     @Column(name="version")
     private String version;
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 
     @Column(name="region")
     private String region;

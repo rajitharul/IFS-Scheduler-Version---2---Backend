@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "trainer" )
@@ -143,6 +144,22 @@ public class Trainer {
     private User user;
 
 
+    @OneToMany(mappedBy = "trainer")
+    Set <NotificationUpdate> updates;
 
+    public User getUser() {
+        return user;
+    }
 
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public Set<NotificationUpdate> getUpdates() {
+        return updates;
+    }
+
+    public void setUpdates(Set<NotificationUpdate> updates) {
+        this.updates = updates;
+    }
 }

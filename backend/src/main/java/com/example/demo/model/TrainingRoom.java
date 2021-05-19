@@ -3,6 +3,8 @@ package com.example.demo.model;
 import org.hibernate.annotations.NaturalId;
 
 import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "training_room")
@@ -15,6 +17,16 @@ public class TrainingRoom {
 
     @Column(name = "capacity")
     private int capacity;
+
+    @OneToMany(mappedBy="trainingRoom")
+    private Set<TrainingSession> trainingSessions;
+
+
+
+
+
+
+
 
     public TrainingRoom() {
     }
