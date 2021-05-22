@@ -139,4 +139,24 @@ public class VirtualMachineController {
         response.put("deleted",Boolean.TRUE);
         return ResponseEntity.ok(response);
     }
+
+
+    @PutMapping("/virtualMachines/{id}")
+    public ResponseEntity<VirtualMachine> updateVirtualMachine(@PathVariable Long id, @RequestBody VirtualMachine virtualMachine) {
+        virtualMachineRepository.save(virtualMachine);
+
+
+        return ResponseEntity.ok(virtualMachine);
+
+    }
+
+
+
+    @GetMapping("/virtualMachines-trainingSession/{id}")
+    public List<VirtualMachine> getVirtualMachineByTrainingSessions(@PathVariable Long id){
+        System.out.println(virtualMachineRepository.findVirtualMachineByTrainingSessions(id).get(1).getVirtualMachineId());
+        return virtualMachineRepository.findVirtualMachineByTrainingSessions(id);
+    }
+
+
 }
