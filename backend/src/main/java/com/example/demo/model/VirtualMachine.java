@@ -89,14 +89,8 @@ public class VirtualMachine {
 
 
 
-    @ManyToMany(fetch = FetchType.LAZY , cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
-    @JoinTable(
-            name = "training_session_virtual_machine",
-            joinColumns = @JoinColumn(name = "vm_id"),
-            inverseJoinColumns = @JoinColumn(name = "s_id")
-    )
-
-    //@JsonIgnoreProperties("virtualMachines")
+    @ManyToMany(mappedBy = "virtualMachines" , fetch = FetchType.LAZY , cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+       //@JsonIgnoreProperties("virtualMachines")
     private List<TrainingSession> trainingSessions;
 
 

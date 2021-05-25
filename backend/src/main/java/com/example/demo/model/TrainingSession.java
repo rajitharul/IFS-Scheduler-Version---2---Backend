@@ -179,7 +179,7 @@ public class TrainingSession {
         this.deliveryMethod = deliveryMethod;
     }
 
-    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH })
+    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(
             name = "training_session_virtual_machine",
             joinColumns = @JoinColumn(name = "s_id"),
@@ -212,7 +212,7 @@ public class TrainingSession {
 
     }
 
-    @ManyToMany(fetch = FetchType.LAZY , cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
+    @ManyToMany(fetch = FetchType.LAZY , cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(
             name = "training_session_trainer",
             joinColumns = @JoinColumn(name = "training_session_id"),

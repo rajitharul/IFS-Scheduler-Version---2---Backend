@@ -58,12 +58,7 @@ public class Trainer {
     public Trainer() {
     }
 
-    @ManyToMany(fetch = FetchType.LAZY , cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
-    @JoinTable(
-            name = "training_session_trainer",
-            joinColumns = @JoinColumn(name = "trainer_id"),
-            inverseJoinColumns = @JoinColumn(name = "training_session_id")
-    )
+    @ManyToMany(mappedBy = "trainers" , fetch = FetchType.LAZY , cascade = {CascadeType.PERSIST, CascadeType.MERGE})
 
     @JsonIgnoreProperties("trainers")
     private List<TrainingSession> trainingSessions;
