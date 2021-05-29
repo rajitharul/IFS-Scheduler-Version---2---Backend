@@ -100,8 +100,36 @@ public class TrainingSessionServiceImpl implements TrainingSessionService {
 	@Transactional
 	public void updateTrainingSession(TrainingSession trainingSession, Long id) {
 
+		TrainingSession trsession  = trainingSessionRepository.getOne(id);
 
-		trainingSessionRepository.save(trainingSession);
+
+
+
+		for(int i=0 ; i<trainingSession.getVmIds().length ; i++) {
+
+
+			long num = Long.parseLong(trainingSession.getVmIds()[i]);
+
+			System.out.println("inside TrainingSession Service impl addVm loop");
+			trsession.addVM(virtualMachineRepository.findVirtualMachineByVirtualMachineId(num));
+
+		}
+
+
+
+
+		for(int i=0 ; i<trainingSession.getTrainerids().length ; i++) {
+
+			System.out.println("inside TrainingSession Service impl addTrainer  loop");
+
+
+			trsession.add(trainerRepository.findByTrainerId(trainingSession.getTrainerids()[i]));
+
+		}
+
+
+
+		trainingSessionRepository.save(trsession);
 
 
 	}

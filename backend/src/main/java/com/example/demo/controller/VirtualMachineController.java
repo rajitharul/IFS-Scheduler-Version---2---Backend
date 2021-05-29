@@ -30,11 +30,13 @@ public class VirtualMachineController {
 
 
     @GetMapping("/availableVirtualMachines/{datestring}/{version}/{duration}")
-    public List<VirtualMachine> getAvailableVirtualMachines(@PathVariable String datestring , @PathVariable String version , @PathVariable int duration) throws ParseException {
+    public List<VirtualMachine> getAvailableVirtualMachines(@PathVariable String datestring , @PathVariable String product , @PathVariable int duration) throws ParseException {
 
         System.out.println("running method");
 
-        List<VirtualMachine> virtualMachines = virtualMachineRepository.findAll();
+        product=product.replace('-',' ');
+
+        List<VirtualMachine> virtualMachines = virtualMachineRepository.findAllByProductandStatus(product, "working");
 
         List<VirtualMachine> availableVms =  new ArrayList<VirtualMachine>();
 
@@ -116,6 +118,9 @@ public class VirtualMachineController {
     @PreAuthorize("hasRole('MANAGER')")
     @PostMapping("/virtualMachines")
     public VirtualMachine addVirtualMachine(@RequestBody VirtualMachine virtualMachine) {
+        String product = virtualMachine.getProduct();
+        String replaceString=product.replace('-',' ');
+        virtualMachine.setProduct(replaceString);
         return virtualMachineRepository.save(virtualMachine);
     }
 

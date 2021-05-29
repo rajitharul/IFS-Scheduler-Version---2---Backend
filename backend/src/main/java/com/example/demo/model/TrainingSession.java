@@ -40,6 +40,9 @@ public class TrainingSession {
     @Column(name = "duration")
     private int duration;
 
+    @Column(name = "end_date")
+    private Date endDate;
+
     @Column(name = "max_participants")
     private int maxParticipants;
 
@@ -89,6 +92,7 @@ public class TrainingSession {
     public TrainingSession(String sessionName,
                            Date startDate,
                            int duration,
+                           Date endDate,
                            int maxParticipants,
                            String ifsApplicationVersion,
                            int bufferTime,
@@ -99,6 +103,7 @@ public class TrainingSession {
         this.sessionName = sessionName;
         this.startDate = startDate;
         this.duration = duration;
+        this.endDate = endDate;
         this.maxParticipants = maxParticipants;
         this.ifsApplicationVersion = ifsApplicationVersion;
         this.bufferTime = bufferTime;
@@ -137,6 +142,14 @@ public class TrainingSession {
 
     public void setDuration(int duration) {
         this.duration = duration;
+    }
+
+    public Date getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(Date endDate) {
+        this.endDate = endDate;
     }
 
     public int getMaxParticipants() {

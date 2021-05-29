@@ -89,9 +89,30 @@ public class TrainingSessionController {
     public ResponseEntity<TrainingSession> getTrainingSessionById(@PathVariable Long id) {
         TrainingSession trainingSession = trainingSessionRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Training Session Not Found"));
+
+        String temp = trainingSession.getIfsApplicationVersion();
+
+        String replaceString=temp.replace('-',' ');
+        trainingSession.setIfsApplicationVersion(replaceString);
+        System.out.println(replaceString);
         return ResponseEntity.ok(trainingSession);
     }
 
+    @PutMapping("/trainingSessionVm/{id}")
+    public ResponseEntity<TrainingSession> updateTrainingSessionVm(@PathVariable Long id, @RequestBody TrainingSession trainingSessionDetails) {
+        TrainingSession trainingSession = trainingSessionRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Training Session Not Found")
+                );
+
+        trainingSession.setVirtualMachines(trainingSessionDetails.getVirtualMachines());
+
+        System.out.println(trainingSession.toString());
+
+
+        TrainingSession updateTrainingSession = trainingSessionRepository.save(trainingSession);
+        return ResponseEntity.ok(updateTrainingSession);
+
+    }
 
     //update training session
     @PutMapping("/trainingSessions/{id}")

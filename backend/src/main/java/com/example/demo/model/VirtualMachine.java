@@ -39,8 +39,9 @@ public class VirtualMachine {
     public VirtualMachine() {
     }
 
-    public VirtualMachine(String product, String version, String region, String status) {
+    public VirtualMachine(String name, String product, String version, String region, String status) {
         super();
+        this.name=name;
         this.product = product;
         this.version = version;
         this.region = region;
