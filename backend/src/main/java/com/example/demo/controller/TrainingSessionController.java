@@ -80,9 +80,6 @@ public class TrainingSessionController {
          trainingSessionService.saveTrainingSession(trainingSession);
     }
 
-
-
-
     //get training session by id
     @GetMapping("/trainingSessions/{id}")
 
@@ -91,6 +88,24 @@ public class TrainingSessionController {
                 .orElseThrow(() -> new ResourceNotFoundException("Training Session Not Found"));
         return ResponseEntity.ok(trainingSession);
     }
+
+
+    @PutMapping("/trainingSessionVm/{id}")
+    public ResponseEntity<TrainingSession> updateTrainingSessionVm(@PathVariable Long id, @RequestBody TrainingSession trainingSessionDetails) {
+        TrainingSession trainingSession = trainingSessionRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Training Session Not Found")
+                );
+
+        trainingSession.setVirtualMachines(trainingSessionDetails.getVirtualMachines());
+
+        System.out.println(trainingSession.toString());
+
+
+        TrainingSession updateTrainingSession = trainingSessionRepository.save(trainingSession);
+        return ResponseEntity.ok(updateTrainingSession);
+
+    }
+
 
 
     //update training session
