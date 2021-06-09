@@ -76,8 +76,9 @@ public class TrainingSessionController {
     @PreAuthorize("hasRole('ROLE_MANAGER')")
     public void createTrainingSession(@RequestBody TrainingSession trainingSession) {
 
+        trainingSessionRepository.save(trainingSession);
 
-         trainingSessionService.saveTrainingSession(trainingSession);
+         //trainingSessionService.saveTrainingSession(trainingSession);
     }
 
     //get training session by id

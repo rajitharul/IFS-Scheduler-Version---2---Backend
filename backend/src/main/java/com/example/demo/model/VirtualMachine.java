@@ -89,7 +89,7 @@ public class VirtualMachine {
 
 
 
-    @ManyToMany(mappedBy = "virtualMachines" , fetch = FetchType.LAZY , cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @ManyToMany(mappedBy = "virtualMachines" , fetch = FetchType.LAZY , cascade = {CascadeType.MERGE})
        //@JsonIgnoreProperties("virtualMachines")
     private List<TrainingSession> trainingSessions;
 

@@ -58,7 +58,7 @@ public class Trainer {
     public Trainer() {
     }
 
-    @ManyToMany(mappedBy = "trainers" , fetch = FetchType.LAZY , cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @ManyToMany(mappedBy = "trainers" , fetch = FetchType.LAZY , cascade = {CascadeType.MERGE})
 
     @JsonIgnoreProperties("trainers")
     private List<TrainingSession> trainingSessions;
