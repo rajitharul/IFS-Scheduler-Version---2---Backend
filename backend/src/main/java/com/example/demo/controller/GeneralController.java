@@ -65,7 +65,7 @@ public class GeneralController {
 
 
     @PostMapping("/trainingRooms")
-    public TrainingRoom addTrainingCordinator(@RequestBody TrainingRoom trainingRoom) {
+    public TrainingRoom addTrainingRoom(@RequestBody TrainingRoom trainingRoom) {
 
         return trainingRoomRepository.save(trainingRoom);
     }

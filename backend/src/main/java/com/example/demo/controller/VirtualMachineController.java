@@ -34,7 +34,7 @@ public class VirtualMachineController {
 
         System.out.println("running method");
 
-        List<VirtualMachine> virtualMachines = virtualMachineRepository.findAll();
+        List<VirtualMachine> virtualMachines = virtualMachineRepository.findVirtualMachineByStatusAndVersion("Available" , version);
 
         List<VirtualMachine> availableVms =  new ArrayList<VirtualMachine>();
 

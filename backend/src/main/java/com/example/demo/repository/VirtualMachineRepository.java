@@ -14,5 +14,8 @@ public interface VirtualMachineRepository extends JpaRepository<VirtualMachine,L
     VirtualMachine findVirtualMachineByVirtualMachineId (long id);
     List<VirtualMachine> findVirtualMachineByTrainingSessions(long id);
 
+    List<VirtualMachine> findVirtualMachineByStatusAndVersion(String status , String version);
+
+
 
 }
